@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { Animated } from 'react-native';
+import { Animated, Text } from 'react-native';
 
 import styles from './styles';
 
@@ -24,12 +24,9 @@ export default class Affix extends PureComponent {
     baseColor: PropTypes.string.isRequired,
     animationDuration: PropTypes.number.isRequired,
 
-    style: Animated.Text.propTypes.style,
+    style: Text.propTypes.style,
 
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node,
-    ]),
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 
   constructor(props) {
@@ -38,7 +35,7 @@ export default class Affix extends PureComponent {
     let { active, focused } = this.props;
 
     this.state = {
-      opacity: new Animated.Value((active || focused)? 1 : 0),
+      opacity: new Animated.Value(active || focused ? 1 : 0),
     };
   }
 
@@ -46,13 +43,11 @@ export default class Affix extends PureComponent {
     let { opacity } = this.state;
     let { active, focused, animationDuration } = this.props;
 
-    if ((focused ^ props.focused) || (active ^ props.active)) {
-      Animated
-        .timing(opacity, {
-          toValue: (props.active || props.focused)? 1 : 0,
-          duration: animationDuration,
-        })
-        .start();
+    if (focused ^ props.focused || active ^ props.active) {
+      Animated.timing(opacity, {
+        toValue: props.active || props.focused ? 1 : 0,
+        duration: animationDuration,
+      }).start();
     }
   }
 
